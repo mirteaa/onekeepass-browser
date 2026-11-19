@@ -1,3 +1,5 @@
+huge fckn warning for AI slop, treat appropriately 
+
 # OneKeePass Browser Extension
 Browser Extension that can be used with OneKeePass. This is based on native messaging. 
 
