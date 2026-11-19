@@ -50,8 +50,9 @@
                   (< (.-innerHeight js/window) 50))))))
 
 ;; Observer-driven re-detection. The cheap light-DOM password check short-circuits
-;; the fuller identify-page scan on login-less but churny pages (feeds, SPAs) so a
-;; burst of unrelated DOM changes does not cost a full scan.
+;; the fuller identify-page scan on login-less but churny pages (feeds, YouTube,
+;; SPAs) so a burst of unrelated DOM changes does not cost a full scan. The
+;; observer itself is throttled to one pass per window (see mutation-tracking).
 ;; NOTE: querySelector does not pierce shadow DOM, so a login injected
 ;; *dynamically* inside shadow DOM is not re-detected by this path; such logins
 ;; present at load are still caught by the unconditional initial identify-page.
@@ -70,13 +71,11 @@
     SHOW_ENTRY_LIST popup-host/create-entry-list-popup
     SELECTED_ENTRY_DETAIL form-fields/fill-inputs})
 
-  ;; Register to observe any div or form nodes added dynamically that may carry
-  ;; the login fields. Debounced + gated (detect-on-mutation) so a churny but
+  ;; Observe div/form nodes added dynamically that may carry login fields. The
+  ;; observation is throttled and gated by detect-on-mutation so a churny but
   ;; login-less page does not pay for a full scan per mutation.
   ;; TODO: Needs to check more sites as in some sites we need to use 'Redetect' action
-  ;; (mt/inputs-on-dom-observation detect-on-mutation)
-
-  (mt/inputs-on-dom-observation form-fields/identify-page)
+  (mt/inputs-on-dom-observation detect-on-mutation)
 
   ;; Initial pass. Unconditional (not behind the light-DOM password check) so a
   ;; login whose inputs live in shadow DOM (e.g hbomax, troweprice) is still

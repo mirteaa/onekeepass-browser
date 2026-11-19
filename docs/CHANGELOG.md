@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [Unreleased]
+
+### Fixed
+
+- **Firefox slowdown on DOM-heavy pages such as YouTube.** Re-detection after dynamic DOM changes is now throttled to one pass per window and gated on the presence of a password field, instead of running a full-document scan for every added `<div>` in every frame. Login forms added after page load are still detected. A login injected dynamically *inside* a shadow root is still only caught by the initial scan or the **Redetect login fields** button.
+
 ## [1.4.0] - 2026-06-15
 
 ### Added
